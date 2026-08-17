@@ -452,16 +452,16 @@
 --------------------------------------------------------- */
 
 const CATEGORIES = [
-  { key: 'mess',    name: 'Mess & Food',   color: '#8C9E72', icon: '🍛' },
-  { key: 'rent',    name: 'Hostel & Rent', color: '#9C6F4A', icon: '🏠' },
-  { key: 'transport', name: 'Transport',   color: '#6E8B96', icon: '🚌' },
+  { key: 'food',    name: 'Canteen & Snacks', color: '#8C9E72', icon: '🍛' },
+  { key: 'commute', name: 'Travel & Fuel',    color: '#6E8B96', icon: '🛵' },
   { key: 'books',   name: 'Books & Stationery', color: '#B08F4E', icon: '📚' },
   { key: 'recharge', name: 'Recharge & Subscriptions', color: '#C17A3F', icon: '📱' },
   { key: 'fun',     name: 'Outings & Fun', color: '#B5566B', icon: '🎉' },
+  { key: 'fest',    name: 'Fests & Events', color: '#9C6F4A', icon: '🎪' },
   { key: 'health',  name: 'Health & Essentials', color: '#6F9A82', icon: '🧴' },
   { key: 'other',   name: 'Other',         color: '#9A8C79', icon: '🧺' },
 ];
-const DEFAULT_BUDGETS = { mess:3500, rent:5000, transport:800, books:500, recharge:400, fun:1000, health:500, other:500 };
+const DEFAULT_BUDGETS = { food:1500, commute:1200, books:500, recharge:300, fun:800, fest:500, health:400, other:500 };
 
 let state = {
   transactions: [],
@@ -520,15 +520,15 @@ function sampleData(){
   const iso = (d) => d.toISOString().slice(0,10);
   const day = (offset) => { const d = new Date(today); d.setDate(d.getDate()-offset); return iso(d); };
   return [
-    { id: cryptoId(), date: day(1), desc: 'Canteen maggi run', category: 'mess', type: 'expense', amount: 90 },
-    { id: cryptoId(), date: day(2), desc: 'Pocket money from home', category: 'other', type: 'income', amount: 6000 },
-    { id: cryptoId(), date: day(2), desc: 'Hostel mess fee', category: 'rent', type: 'expense', amount: 3500 },
-    { id: cryptoId(), date: day(3), desc: 'Chai with roomies', category: 'mess', type: 'expense', amount: 40 },
-    { id: cryptoId(), date: day(4), desc: 'Tuition assignment help (freelance)', category: 'other', type: 'income', amount: 1200 },
+    { id: cryptoId(), date: day(1), desc: 'Bus pass renewal', category: 'commute', type: 'expense', amount: 450 },
+    { id: cryptoId(), date: day(2), desc: 'Allowance from parents', category: 'other', type: 'income', amount: 4000 },
+    { id: cryptoId(), date: day(2), desc: 'Petrol for scooty', category: 'commute', type: 'expense', amount: 300 },
+    { id: cryptoId(), date: day(3), desc: 'Canteen samosa break', category: 'food', type: 'expense', amount: 40 },
+    { id: cryptoId(), date: day(4), desc: 'Assignment tutoring (freelance)', category: 'other', type: 'income', amount: 1000 },
     { id: cryptoId(), date: day(5), desc: 'Mobile recharge', category: 'recharge', type: 'expense', amount: 249 },
-    { id: cryptoId(), date: day(6), desc: 'Auto to campus', category: 'transport', type: 'expense', amount: 60 },
-    { id: cryptoId(), date: day(7), desc: 'Xerox & notebook', category: 'books', type: 'expense', amount: 180 },
-    { id: cryptoId(), date: day(8), desc: 'Movie night with friends', category: 'fun', type: 'expense', amount: 350 },
+    { id: cryptoId(), date: day(6), desc: 'Printouts for project', category: 'books', type: 'expense', amount: 120 },
+    { id: cryptoId(), date: day(7), desc: 'College fest entry pass', category: 'fest', type: 'expense', amount: 250 },
+    { id: cryptoId(), date: day(8), desc: 'Movie after college', category: 'fun', type: 'expense', amount: 300 },
   ];
 }
 function cryptoId(){ return 'id-' + Math.random().toString(36).slice(2,10) + Date.now().toString(36); }
@@ -668,7 +668,7 @@ function renderForm(){
   return `
   <div class="card-panel">
     <h2>Add an entry</h2>
-    <div class="sub">Pocket money in, canteen bill out — log it here.</div>
+    <div class="sub">Allowance in, petrol or canteen bill out — log it here.</div>
     <form id="txnForm">
       <div class="field">
         <label>Type</label>
@@ -679,7 +679,7 @@ function renderForm(){
       </div>
       <div class="field">
         <label for="descInput">Description</label>
-        <input id="descInput" type="text" placeholder="e.g. Canteen lunch" required />
+        <input id="descInput" type="text" placeholder="e.g. Petrol for scooty" required />
       </div>
       <div class="field">
         <label for="amountInput">Amount</label>
@@ -707,7 +707,7 @@ function renderList(){
       <div class="empty-state">
         <div class="glyph">🕯️</div>
         <p>No entries yet for ${monthLabel()}.</p>
-        <div class="sub2">Log your first mess bill or pocket money — the jars are waiting.</div>
+        <div class="sub2">Log your first bus fare or canteen bill — the jars are waiting.</div>
       </div>
     </div>`;
   }
@@ -817,7 +817,7 @@ function renderBudgetModal(){
   overlay.innerHTML = `
     <div class="modal">
       <h2>Set monthly budgets</h2>
-      <div class="sub">How far should this month's allowance stretch per jar?</div>
+      <div class="sub">How far should this month's allowance stretch across commute, canteen & more?</div>
       ${rows}
       <div class="modal-actions">
         <button class="cancel" id="cancelBudgets">Cancel</button>
